@@ -17,5 +17,15 @@ pipeline{
 				sh 'docker build -t manikandann/spring-petclinic:latest .'
 			}
 		}
+		stage("Push Dockerfile"){
+			agent any 
+			steps{
+				withCredentials([usernamePassword(credentialsId: 'DockerHub',
+					passwordVariable: 'dockerHubPassword', usernameVariable: 'DockerHubUser')]){
+					sh "docker login -u ${env.DockerHubUser} -p ${env.DockerhubPassword}"
+					sh 'docker push manikandann/spring-petclinic:latest'
+				}
+			}
+		}
 	}
 }
